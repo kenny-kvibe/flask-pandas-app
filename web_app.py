@@ -47,33 +47,38 @@ def register_routes(app:Flask, df:pd.DataFrame):
 	# === page data ==================
 	@view.route('/page-data', methods=['GET', 'POST'])
 	def page_data():
-		table = df
-		number_arg = ''
+		toggle_dir_arg = 'vertical'
+		table, number_arg = df, ''
+		number_count = 0
 
 		if request.method == 'POST':
-			number_arg = request.form.get('number-input', '')
-
-			if number_arg != '' and number_arg.isdigit():
-				table = df.copy()
-				number_arg = int(number_arg)
-
-				for col in table.columns:
-					table[col] = table[col].where(table[col] == number_arg, '–')
-
-				if not isinstance(table, pd.DataFrame):
-					table = table.to_frame()
-
-				table.fillna('–', inplace=True)
+			toggle_dir_arg = request.form.get('input-table-direction-toggle', '')
+			if toggle_dir_arg == '':
+				toggle_dir_arg = request.form.get('input-table-direction', 'vertical')
 			else:
+				toggle_dir_arg = 'horizontal' if toggle_dir_arg == 'vertical' else 'vertical'
+
+			number_arg = request.form.get('number-input', '')
+			if not number_arg.isdigit():
 				number_arg = ''
+			else:
+				number_count = df[df.columns].applymap(lambda x: x == int(number_arg)).sum().sum()
+
+				# table = df.copy()
+				# for col in table.columns:
+				# 	table[col] = table[col].where(table[col] == int(number_arg), '--')
+				# if not isinstance(table, pd.DataFrame):
+				# 	table = table.to_frame()
+				# table.fillna('--', inplace=True)
 
 		return render_template(
 			'page-data.html',
+			number_count=number_count,
 			number_arg=number_arg,
 			page_title=title,
 			head_title='Data',
+			table_direction=toggle_dir_arg,
 			dict_table=table.to_dict())
-
 
 	# === error handler ==================
 	@app.errorhandler(HTTPException)

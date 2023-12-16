@@ -6,49 +6,73 @@
 		<div class="col col-12">
 			<p class="fs-5">The <strong>Pandas DataFrame</strong> table.</p>
 		</div>
-		<div class="col col-12 col-xl-3 col-lg-4 col-md-6">
-			<form method="POST" action="{{ url_for(request.endpoint, _external=True) }}" class="d-block mb-3">
-				<div class="input-group input-group-sm mb-2">
-					<label class="input-group-text" id="number-search">Number:</label>
-					<input
-						type="text"
-						value="{{ number_arg }}"
-						placeholder="Input a number to search ..."
-						class="form-control"
-						name="number-input"
-						aria-describedby="number-search" />
-					<button type="submit" class="btn btn-outline-primary">Search</button>
-				</div>
-				<div class="input-group input-group-sm">
-					<a
-						class="btn btn-outline-primary"
-						rel="noopener nofollow noindex"
-						target="_self"
-						href="{{ url_for(request.endpoint, _external=True) }}"
-					>Reset</a>
-				</div>
-			</form>
-		</div>
 		<div class="col col-12">
-			<table class="table table-bordered table table-bordered border-dark table-hover shadow-lg">
+			<div class="row mb-4">
+				<div class="col col-9 col-xl-3 col-lg-4 col-md-6">
+					<form method="POST" action="{{ url_for(request.endpoint, _external=True) }}" class="input-group">
+						<label class="input-group-text" id="number-search">Number:</label>
+						<input type="hidden" class="d-none" value="{{ table_direction }}" name="input-table-direction" />
+						<input
+							type="text"
+							value="{{ number_arg }}"
+							placeholder="Input a number to search ..."
+							class="form-control"
+							name="number-input"
+							aria-describedby="number-search" />
+						<button type="submit" class="btn btn-outline-primary">Search</button>
+					</form>
+				</div>
+				<div class="col col-3 col-xl-9 col-lg-8 col-md-6">
+					<form method="POST" action="{{ url_for(request.endpoint, _external=True) }}">
+						<input type="hidden" class="d-none" value="{{ number_arg }}" name="number-input" />
+						<input type="hidden" class="d-none" value="{{ table_direction }}" name="input-table-direction-toggle" />
+						<button type="submit" class="btn btn-outline-primary">Toggle table</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		{% if number_arg != '' %}
+			<div class="col col-12 mb-1">
+				<p class="fs-6 text-success">Found results: {{ number_count }}</p>
+			</div>
+		{% endif %}
+		<div class="col col-12 mb-1">
+			<table class="table table-bordered table table-bordered border border-dark table-hover shadow">
 				<tbody>
-					{% for key in dict_table %}
+					{% if table_direction == 'horizontal' %}
+						{% for key, dict in dict_table|items %}
+							<tr>
+								<th scope="row" class="text-dark border-dark table-warning">{{ key }}</th>
+								{% for value in dict.values() %}
+									<td class="text-dark border-dark {%
+										if number_arg == '' %}table-primary{%
+										elif number_arg == value|string %}table-success{%
+										else %}table-danger{%
+										endif %}"
+									>{{ value }}</td>
+								{% endfor %}
+							</tr>
+						{% endfor %}
+					{% elif table_direction == 'vertical' %}
 						<tr>
-							<th scope="row" class=" bg-warning">
-								<strong>{{ key }}</strong>
-							</th>
-							{% for idx, value in dict_table[key]|items %}
-								<td class="table-column-{{ key }}-{{ idx }} {%
-									if number_arg != '' %}{%
-										if value == number_arg %}text-light bg-success{%
-										else %}text-dark bg-danger{%
-										endif %}{%
-									else %}text-light bg-primary{%
-									endif %}"
-								>{{ value }}</td>
+							{% for key in dict_table.keys() %}
+								<th scope="col" class="text-dark border-dark table-warning">{{ key }}</th>
 							{% endfor %}
 						</tr>
-					{% endfor %}
+						{% for idx in range(dict_table|length) %}
+							<tr>
+								{% for dict in dict_table.values() %}
+									{% set value = dict[idx] %}
+									<td class="text-dark border-dark {%
+										if number_arg == '' %}table-primary{%
+										elif number_arg == value|string %}table-success{%
+										else %}table-danger{%
+										endif %}"
+									>{{ value }}</td>
+								{% endfor %}
+							</tr>
+						{% endfor %}
+					{% endif %}
 				</tbody>
 			</table>
 		</div>
