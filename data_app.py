@@ -10,6 +10,14 @@ import constants as c
 import functions as f
 
 
+
+def main(cols_count:int = 1, rows_count:int = 1, value_low:int = 0, value_high:int = 1) -> pd.DataFrame:
+	return pd.DataFrame({
+		f'rand_col_{i}': pd.Series(f.get_random_ints_array(value_low, value_high, rows_count))
+		for i in range(cols_count)
+	})
+
+
 def create_save_dataframe_plot(
 	df:pd.DataFrame,
 	window_title:str = 'DataFrame',
@@ -23,6 +31,7 @@ def create_save_dataframe_plot(
 	values_row_fg_color:str = '#EFEFEF',
 	values_row_bg_color:str = '#0033FF',
 	show_plot:bool = False,
+	save_plot_png:bool = True,
 ):
 	mpl.rcParams['toolbar'] = 'None'
 
@@ -79,17 +88,11 @@ def create_save_dataframe_plot(
 
 	fig.set_size_inches(window_width/fig.dpi, window_height/fig.dpi)
 
-	plt.savefig(os.path.join(c.ROOT_PATH, f'{window_title}.png'))
+	if save_plot_png:
+		plt.savefig(os.path.join(c.ROOT_PATH, f'{window_title}.png'))
 	if show_plot:
 		plt.show()
 	plt.close(fig)
-
-
-def main(cols_count:int = 1, rows_count:int = 1, value_low:int = 0, value_high:int = 1) -> pd.DataFrame:
-	return pd.DataFrame({
-		f'rand_col_{i}': pd.Series(f.get_random_ints_array(value_low, value_high, rows_count))
-		for i in range(cols_count)
-	})
 
 
 def test(df:pd.DataFrame):
@@ -112,5 +115,5 @@ def test(df:pd.DataFrame):
 
 
 if __name__ == '__main__':
-	test(main())
+	test(main(3, 5, 100, 999))
 	raise SystemExit(0)
