@@ -16,7 +16,7 @@ def sys_print(*args:Any, sep:str = '\n'):
 	sys.stdout.flush()
 
 
-def print_get_col_value(df:pd.DataFrame, col_idx:int, row_i:int, row_by:Literal['idx', 'int'] = 'idx') -> Any|None:
+def print_get_col_value(df:pd.DataFrame, col_idx:int, row_i:int, row_by:Literal['idx', 'num'] = 'idx') -> Any|None:
 	column_name = str(df.columns[col_idx])
 	sys_print('{} {} col {} : {}'.format(
 		row_by,
@@ -24,7 +24,7 @@ def print_get_col_value(df:pd.DataFrame, col_idx:int, row_i:int, row_by:Literal[
 		col_idx,
 		(get_column_value_by_row_idx(df, column_name, row_i)
 		 if row_by == 'idx' else
-		 get_column_value_by_row_int(df, column_name, row_i))
+		 get_column_value_by_row_num(df, column_name, row_i))
 	))
 
 
@@ -56,12 +56,12 @@ def get_column_values(df:pd.DataFrame, column_name:str) -> pd.Series:
 	return df[column_name].values
 
 
-def get_column_value_by_row_int(df:pd.DataFrame, column_name:str, row_integer:int) -> Any|None:
+def get_column_value_by_row_num(df:pd.DataFrame, column_name:str, row_number:int) -> Any|None:
 	value = None
 	try:
-		value = df.loc[row_integer, column_name]
+		value = df.loc[row_number, column_name]
 		if pd.isna(value):
-			value = df[column_name][row_integer]
+			value = df[column_name][row_number]
 			if pd.isna(value):
 				value = None
 	except KeyError:
@@ -82,18 +82,18 @@ def get_column_value_by_row_idx(df:pd.DataFrame, column_name:str, row_index:int)
 	return value
 
 
-def drop_row_by_row_int(df:pd.DataFrame, row_integer:int) -> pd.DataFrame:
-	return df.drop(index=row_integer)  #type:ignore
+def drop_row_by_row_num(df:pd.DataFrame, row_number:int) -> pd.DataFrame:
+	return df.drop(index=row_number)
 
 
 def drop_row_by_row_idx(df:pd.DataFrame, row_index:int) -> pd.DataFrame:
 	return df.drop(df.index[row_index])  #type:ignore
 
 
-def drop_row_by(df:pd.DataFrame, row_i:int, row_by:Literal['idx', 'int'] = 'idx') -> pd.DataFrame:
-	if row_by == 'int':
-		return drop_row_by_row_int(df, row_i)
-	return drop_row_by_row_idx(df, row_i)
+def drop_row_by(df:pd.DataFrame, row_i:int, row_by:Literal['idx', 'num'] = 'idx') -> pd.DataFrame:
+	return (drop_row_by_row_idx(df, row_i)
+			if row_by == 'idx' else
+			drop_row_by_row_num(df, row_i))
 
 
 def create_save_dataframe_plot(
@@ -144,7 +144,6 @@ def create_save_dataframe_plot(
 		loc='center',
 	)
 
-	# table_plt.scale(1, 1)
 	table_cells = table_plt.get_celld()
 
 	for cell_key, cell in table_cells.items():

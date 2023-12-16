@@ -13,19 +13,19 @@ def main(cols_count:int = 1, rows_count:int = 1, value_low:int = 0, value_high:i
 
 def test(df:pd.DataFrame):
 	f.print_df_table(df)
-	f.print_get_col_value(df, 0, 0, 'int')
 	f.print_get_col_value(df, 0, 0, 'idx')
-	f.print_get_col_value(df, 0, 1, 'int')
+	f.print_get_col_value(df, 0, 0, 'num')
 	f.print_get_col_value(df, 0, 1, 'idx')
+	f.print_get_col_value(df, 0, 1, 'num')
 
-	df = f.drop_row_by(df, 0, 'int')
+	df = f.drop_row_by(df, 0, 'num')
 	df = f.drop_row_by(df, 0, 'idx')
 
 	f.print_df_table(df)
-	f.print_get_col_value(df, 0, 0, 'int')
 	f.print_get_col_value(df, 0, 0, 'idx')
-	f.print_get_col_value(df, 0, 2, 'int')
+	f.print_get_col_value(df, 0, 0, 'num')
 	f.print_get_col_value(df, 0, 2, 'idx')
+	f.print_get_col_value(df, 0, 2, 'num')
 
 	f.create_save_dataframe_plot(df)
 
