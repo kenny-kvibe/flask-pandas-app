@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"name": "•",
+			"path": ".",
+			"file_exclude_patterns": [
+				"desktop.ini",
+				"*.sublime-*",
+				"*.code-*"
+			],
+		}
+	],
+	"settings": {
+		"Minify": {
+			"auto_minify_on_save": true,
+			"allowed_file_types": [ "js" ]
+		},
+		"less2css": {
+			"autoCompile": true,
+			"minify": true,
+			"minName": true,
+			"uglifycss": true
+		}
+	},
+	"debugger_configurations": []
+}

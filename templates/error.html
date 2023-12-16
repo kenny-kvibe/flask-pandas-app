@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{# ---------------------------- #}
+{% block page_body_content %}
+	<div class="row my-3 px-3">
+		<div class="col col-12">
+			<h2 class="text-danger"><strong>{{ head_title }}: {{ error_code }}</strong> - {{ error_html|safe }}</h2>
+		</div>
+	</div>
+{% endblock %}

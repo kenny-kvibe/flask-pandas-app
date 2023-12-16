@@ -1,0 +1,5 @@
+flask
+matplotlib<4.0
+numpy<1.25
+pandas<2.0
+python-dotenv
