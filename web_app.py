@@ -47,25 +47,25 @@ def register_routes(app:Flask, df:pd.DataFrame):
 	# === page data ==================
 	@view.route('/page-data', methods=['GET', 'POST'])
 	def page_data():
-		table = df.copy()
+		table = df
+		number_arg = ''
 
 		if request.method == 'POST':
 			number_arg = request.form.get('number-input', '')
 
 			if number_arg != '' and number_arg.isdigit():
+				table = df.copy()
 				number_arg = int(number_arg)
+
 				for col in table.columns:
 					table[col] = table[col].where(table[col] == number_arg, '–')
+
 				if not isinstance(table, pd.DataFrame):
 					table = table.to_frame()
-				table = table.fillna('–')
 
-				f.sys_print(f'Number: {number_arg}')
-
-		else:
-			number_arg = ''
-
-		# f.print_df_table(df)
+				table.fillna('–', inplace=True)
+			else:
+				number_arg = ''
 
 		return render_template(
 			'page-data.html',
