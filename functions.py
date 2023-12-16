@@ -16,24 +16,21 @@ def sys_print(*args:Any, sep:str = '\n'):
 	sys.stdout.flush()
 
 
-def print_get_col_value(df:pd.DataFrame, col_idx:int, row_i:int, row_by:Literal['idx', 'num'] = 'idx') -> Any|None:
-	column_name = str(df.columns[col_idx])
-	sys_print('{} {} col {} : {}'.format(
-		row_by,
-		row_i,
-		col_idx,
-		(get_column_value_by_row_idx(df, column_name, row_i)
-		 if row_by == 'idx' else
-		 get_column_value_by_row_num(df, column_name, row_i))
-	))
+def print_df_col_value(df:pd.DataFrame, col_idx:int, row_i:int, row_by:Literal['idx', 'num'] = 'idx') -> Any|None:
+	col_value = get_column_value_by(df, str(df.columns[col_idx]), row_i, row_by)
+	sys_print(f'{row_by} {row_i} col {col_idx} : {col_value}')
 
 
-def print_df_table(df:pd.DataFrame):
+def print_df_table(df:pd.DataFrame, max_rows:int = 6, max_columns:int = 10):
+	pd.set_option('display.max_rows', max_rows)
+	pd.set_option('display.max_columns', max_columns)
+
 	table = str(df).split('\n')
 	table_head = table[0]
 	table_sep = '–'*len(table_head)
 	table[0] = f'n {table_head[2:]}'
 	table.insert(1, table_sep)
+
 	sys_print(table_sep, *table, table_sep)
 
 
@@ -80,6 +77,12 @@ def get_column_value_by_row_idx(df:pd.DataFrame, column_name:str, row_index:int)
 	except KeyError:
 		value = None
 	return value
+
+
+def get_column_value_by(df:pd.DataFrame, column_name:str, row_i:int, row_by:Literal['idx', 'num'] = 'idx') -> Any|None:
+	return (get_column_value_by_row_idx(df, column_name, row_i)
+			if row_by == 'idx' else
+			get_column_value_by_row_num(df, column_name, row_i))
 
 
 def drop_row_by_row_num(df:pd.DataFrame, row_number:int) -> pd.DataFrame:
@@ -136,23 +139,24 @@ def create_save_dataframe_plot(
 	ax.set_position((0, 0, 1, 1))
 	ax.set_aspect('auto')
 
-	table_plt = ax.table(
-		colLabels=tuple(df.columns),
-		colColours=header_row_bg_colors,
-		cellText=tuple(tuple(str(col) for col in row) for row in df.values),
-		cellColours=values_row_bg_colors,
-		loc='center',
-	)
+	table = ax.table(
+		colLabels   = tuple(df.columns),
+		colColours  = header_row_bg_colors,
+		cellText    = tuple(tuple(str(col) for col in row) for row in df.values),
+		cellColours = values_row_bg_colors,
+		loc         = 'center')
 
-	table_cells = table_plt.get_celld()
+	table_cells = table.get_celld()
 
 	for cell_key, cell in table_cells.items():
 		row, _col = cell_key
 		is_first_row = row == 0
+
 		cell.set_width(cell_width)
 		cell.set_height(cell_height)
 		cell.set_linewidth(cells_border_size)
 		cell.set_edgecolor(cells_border_color)
+
 		cell_text = cell.get_text()
 		cell_text.set_rotation(0)
 		cell_text.set_fontsize(cell_font_size)
@@ -168,5 +172,5 @@ def create_save_dataframe_plot(
 	if save_plot_png:
 		plt.savefig(os.path.join(c.ROOT_PATH, f'{window_title}.png'))
 	if show_plot:
-		plt.show()
+		plt.show(block=True)
 	plt.close(fig)
