@@ -4,7 +4,6 @@ import pandas as pd
 import functions as f
 
 
-
 def main(cols_count:int = 1, rows_count:int = 1, value_low:int = 0, value_high:int = 1) -> pd.DataFrame:
 	return pd.DataFrame({
 		f'rand_col_{i}': pd.Series(f.get_random_ints_array(value_low, value_high, rows_count))
@@ -19,8 +18,8 @@ def test(df:pd.DataFrame):
 	f.print_get_col_value(df, 0, 1, 'int')
 	f.print_get_col_value(df, 0, 1, 'idx')
 
-	df = f.drop_row_by_row_integer(df, 0)
-	df = f.drop_row_by_row_index(df, 0)
+	df = f.drop_row_by(df, 0, 'int')
+	df = f.drop_row_by(df, 0, 'idx')
 
 	f.print_df_table(df)
 	f.print_get_col_value(df, 0, 0, 'int')

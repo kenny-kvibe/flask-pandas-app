@@ -82,12 +82,18 @@ def get_column_value_by_row_idx(df:pd.DataFrame, column_name:str, row_index:int)
 	return value
 
 
-def drop_row_by_row_integer(df:pd.DataFrame, row_integer:int) -> pd.DataFrame:
+def drop_row_by_row_int(df:pd.DataFrame, row_integer:int) -> pd.DataFrame:
 	return df.drop(index=row_integer)  #type:ignore
 
 
-def drop_row_by_row_index(df:pd.DataFrame, row_index:int) -> pd.DataFrame:
+def drop_row_by_row_idx(df:pd.DataFrame, row_index:int) -> pd.DataFrame:
 	return df.drop(df.index[row_index])  #type:ignore
+
+
+def drop_row_by(df:pd.DataFrame, row_i:int, row_by:Literal['idx', 'int'] = 'idx') -> pd.DataFrame:
+	if row_by == 'int':
+		return drop_row_by_row_int(df, row_i)
+	return drop_row_by_row_idx(df, row_i)
 
 
 def create_save_dataframe_plot(
