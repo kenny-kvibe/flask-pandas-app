@@ -7,8 +7,6 @@ from flask import Blueprint, Flask, render_template
 from werkzeug.exceptions import HTTPException
 
 import constants as c
-import functions as f
-
 
 
 def init_app(name:str = __name__) -> Flask:
@@ -45,7 +43,7 @@ def register_routes(app:Flask, df:pd.DataFrame):
 			head_title='Home',
 			dict_table=df.to_dict())
 
-	# === index ==================
+	# === page data ==================
 	@view.route('/page-data', methods=['GET'])
 	def page_data():
 		return render_template(
