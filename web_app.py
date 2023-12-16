@@ -3,10 +3,11 @@
 import pandas as pd
 import psutil
 import socket
-from flask import Blueprint, Flask, render_template
+from flask import Blueprint, Flask, render_template, request
 from werkzeug.exceptions import HTTPException
 
 import constants as c
+import functions as f
 
 
 def init_app(name:str = __name__) -> Flask:
@@ -44,13 +45,34 @@ def register_routes(app:Flask, df:pd.DataFrame):
 			dict_table=df.to_dict())
 
 	# === page data ==================
-	@view.route('/page-data', methods=['GET'])
+	@view.route('/page-data', methods=['GET', 'POST'])
 	def page_data():
+		table = df.copy()
+
+		if request.method == 'POST':
+			number_arg = request.form.get('number-input', '')
+
+			if number_arg != '' and number_arg.isdigit():
+				number_arg = int(number_arg)
+				for col in table.columns:
+					table[col] = table[col].where(table[col] == number_arg, '–')
+				if not isinstance(table, pd.DataFrame):
+					table = table.to_frame()
+				table = table.fillna('–')
+
+				f.sys_print(f'Number: {number_arg}')
+
+		else:
+			number_arg = ''
+
+		# f.print_df_table(df)
+
 		return render_template(
 			'page-data.html',
+			number_arg=number_arg,
 			page_title=title,
 			head_title='Data',
-			dict_table=df.to_dict())
+			dict_table=table.to_dict())
 
 
 	# === error handler ==================

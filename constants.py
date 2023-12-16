@@ -1,6 +1,7 @@
 import dotenv
 import os
 import sys
+from matplotlib.font_manager import fontManager
 
 
 ROOT_PATH = os.path.dirname(__file__)
@@ -15,3 +16,4 @@ dotenv.load_dotenv()
 
 DEV_MODE = os.environ.get('DEV_MODE', '').lower() in ('1', 'true')
 
+TTF_FONTS = tuple(f.name for f in fontManager.ttflist)

@@ -5,21 +5,47 @@
 	<div class="row my-3 px-3">
 		<div class="col col-12">
 			<p class="fs-5">The <strong>Pandas DataFrame</strong> table.</p>
-			<table class="table table-bordered table-hover shadow">
-				<thead>
-					<tr class="table-primary">
-						{% for key in dict_table %}
-							<td>
-								<strong>{{ key }}</strong>
-							</td>
-						{% endfor %}
-					</tr>
-				</thead>
+		</div>
+		<div class="col col-12 col-xl-3 col-lg-4 col-md-6">
+			<form method="POST" action="{{ url_for(request.endpoint, _external=True) }}" class="d-block mb-3">
+				<div class="input-group input-group-sm mb-2">
+					<label class="input-group-text" id="number-search">Number:</label>
+					<input
+						type="text"
+						value="{{ number_arg }}"
+						placeholder="Input a number to search ..."
+						class="form-control"
+						name="number-input"
+						aria-describedby="number-search" />
+					<button type="submit" class="btn btn-outline-primary">Search</button>
+				</div>
+				<div class="input-group input-group-sm">
+					<a
+						class="btn btn-outline-primary"
+						rel="noopener nofollow noindex"
+						target="_self"
+						href="{{ url_for(request.endpoint, _external=True) }}"
+					>Reset</a>
+				</div>
+			</form>
+		</div>
+		<div class="col col-12">
+			<table class="table table-bordered table table-bordered border-dark table-hover shadow-lg">
 				<tbody>
 					{% for key in dict_table %}
 						<tr>
-							{% for idx, col in dict_table[key]|items %}
-								<td class="table-column-{{ idx }}">{{ col }}</td>
+							<th scope="row" class=" bg-warning">
+								<strong>{{ key }}</strong>
+							</th>
+							{% for idx, value in dict_table[key]|items %}
+								<td class="table-column-{{ key }}-{{ idx }} {%
+									if number_arg != '' %}{%
+										if value == number_arg %}text-light bg-success{%
+										else %}text-dark bg-danger{%
+										endif %}{%
+									else %}text-light bg-primary{%
+									endif %}"
+								>{{ value }}</td>
 							{% endfor %}
 						</tr>
 					{% endfor %}
