@@ -1,8 +1,6 @@
 #pyright: reportUnusedFunction=none
 # Docs:  https://flask.palletsprojects.com/
 import pandas as pd
-import psutil
-import socket
 from flask import Blueprint, Flask, render_template, request
 from werkzeug.exceptions import HTTPException
 
@@ -10,11 +8,31 @@ import constants as c
 import functions as f
 
 
+
+def run(name:str, port:int = 80, df:pd.DataFrame|None = None, serve_locally:bool = True) -> int:
+	""" Initialize the `Flask` app and run it using `DataFrame` data """
+	flask_app = init_app(name)
+	register_routes(flask_app, pd.DataFrame() if df is None else df)
+
+	try:
+		flask_app.run(
+			host=f.get_local_ipv4() if serve_locally else '0.0.0.0',
+			port=port,
+			debug=c.DEV_MODE,
+			use_debugger=c.DEV_MODE,
+			use_reloader=c.DEV_MODE)
+	except KeyboardInterrupt:
+		return 1
+	return 0
+
+
 def init_app(name:str = __name__) -> Flask:
+	""" Initialize the `Flask` app """
 	return Flask(name)
 
 
 def send_error_response(title:str, code:int, error_html:str) -> tuple[str, int]:
+	""" Send an error response """
 	return (
 		render_template(
 			'error.html',
@@ -26,6 +44,7 @@ def send_error_response(title:str, code:int, error_html:str) -> tuple[str, int]:
 
 
 def register_routes(app:Flask, df:pd.DataFrame):
+	""" Register the `Flask` routes """
 	title = 'Flask App'
 
 	view = Blueprint(
@@ -42,6 +61,7 @@ def register_routes(app:Flask, df:pd.DataFrame):
 			'home.html',
 			page_title=title,
 			head_title='Home',
+			py_version=f.python_version(),
 			dict_table=df.to_dict())
 
 	# === page data ==================
@@ -86,32 +106,3 @@ def register_routes(app:Flask, df:pd.DataFrame):
 		return send_error_response(title, error.code, error.name)
 
 	app.register_blueprint(view)
-
-
-def main(name:str, port:int = 80, df:pd.DataFrame|None = None, serve_locally:bool = True) -> int:
-	""" Initialize the `Flask` app and run it using `DataFrame` data """
-	flask_app = init_app(name)
-	register_routes(flask_app, pd.DataFrame() if df is None else df)
-
-	try:
-		flask_app.run(
-			host=get_local_ipv4() if serve_locally else '0.0.0.0',
-			port=port,
-			debug=c.DEV_MODE,
-			use_debugger=c.DEV_MODE,
-			use_reloader=c.DEV_MODE)
-	except KeyboardInterrupt:
-		return 1
-	return 0
-
-
-def get_local_ipv4() -> str:
-	""" Get the first IPv4 address that starts with `192.168.` or get `127.0.0.1` """
-	interfaces = psutil.net_if_addrs().values()
-
-	for ifs in interfaces:
-		for addr in ifs:
-			if addr.family == socket.AF_INET and addr.address.startswith('192.168.'):
-				return addr.address
-
-	return '127.0.0.1'

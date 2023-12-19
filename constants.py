@@ -6,6 +6,8 @@ from matplotlib.font_manager import fontManager
 
 ROOT_PATH = os.path.dirname(__file__)
 
+DATAFRAME_DIR_PATH = os.path.join(ROOT_PATH, 'df-data')
+
 FLASK_STATIC_DIR_PATH    = os.path.join(ROOT_PATH, 'static')
 FLASK_TEMPLATES_DIR_PATH = os.path.join(ROOT_PATH, 'templates')
 
