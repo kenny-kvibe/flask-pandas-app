@@ -1,13 +1,13 @@
 #pyright: reportUnusedFunction=none
 # Docs:  https://flask.palletsprojects.com/
 import pandas as pd
+import logging
 from flask import Blueprint, Flask, render_template, request
 from waitress import serve
 from werkzeug.exceptions import HTTPException
 
 import constants as c
 import functions as f
-
 
 
 def run(name: str, port: int = 80, df: pd.DataFrame | None = None, serve_locally: bool = True) -> int:
@@ -34,7 +34,6 @@ def run_app(app: Flask, host: str = '127.0.0.1', port: int = 5000, dev_mode: boo
 			use_debugger=dev_mode,
 			use_reloader=dev_mode)
 
-	import logging
 	logging.basicConfig(level=logging.ERROR)
 	print(f'> Serving on http://{host}:{port} ...\n', end='', flush=True)
 	return serve(app, host=host, port=port)
@@ -63,7 +62,7 @@ def register_routes(app: Flask, df: pd.DataFrame):
 
 	view = Blueprint(
 		'view',
-		__name__,
+		app.import_name,
 		url_prefix='/',
 		static_folder=c.FLASK_STATIC_DIR_PATH,
 		template_folder=c.FLASK_TEMPLATES_DIR_PATH)
