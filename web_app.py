@@ -2,6 +2,7 @@
 # Docs:  https://flask.palletsprojects.com/
 import pandas as pd
 from flask import Blueprint, Flask, render_template, request
+from waitress import serve
 from werkzeug.exceptions import HTTPException
 
 import constants as c
@@ -9,29 +10,35 @@ import functions as f
 
 
 
-def run(name:str, port:int = 80, df:pd.DataFrame|None = None, serve_locally:bool = True) -> int:
+def run(name: str, port: int = 80, df: pd.DataFrame | None = None, serve_locally: bool = True) -> int:
 	""" Initialize the `Flask` app and run it using `DataFrame` data """
-	flask_app = init_app(name)
-	register_routes(flask_app, pd.DataFrame() if df is None else df)
+	app = init_app(name)
+	register_routes(app, pd.DataFrame() if df is None else df)
 
 	try:
-		flask_app.run(
-			host=f.get_local_ipv4() if serve_locally else '0.0.0.0',
-			port=port,
-			debug=c.DEV_MODE,
-			use_debugger=c.DEV_MODE,
-			use_reloader=c.DEV_MODE)
+		host = f.get_local_ipv4() if serve_locally else '0.0.0.0'
+		run_app(app, host, port, c.DEV_MODE)
 	except KeyboardInterrupt:
 		return 1
 	return 0
 
 
-def init_app(name:str = __name__) -> Flask:
+def run_app(app: Flask, host: str = '127.0.0.1', port: int = 5000, dev_mode: bool = False):
+	""" Run the `Flask` app """
+	serve(app,
+		host=host,
+		port=port,
+		debug=dev_mode,
+		use_debugger=dev_mode,
+		use_reloader=dev_mode)
+
+
+def init_app(name: str = __name__) -> Flask:
 	""" Initialize the `Flask` app """
 	return Flask(name)
 
 
-def send_error_response(title:str, code:int, error_html:str) -> tuple[str, int]:
+def send_error_response(title: str, code: int, error_html: str) -> tuple[str, int]:
 	""" Send an error response """
 	return (
 		render_template(
@@ -43,7 +50,7 @@ def send_error_response(title:str, code:int, error_html:str) -> tuple[str, int]:
 		code)
 
 
-def register_routes(app:Flask, df:pd.DataFrame):
+def register_routes(app: Flask, df: pd.DataFrame):
 	""" Register the `Flask` routes """
 	title = 'Flask App'
 
@@ -64,8 +71,8 @@ def register_routes(app:Flask, df:pd.DataFrame):
 			py_version=f.python_version(),
 			dict_table=df.to_dict())
 
-	# === page data ==================
-	@view.route('/page-data', methods=['GET', 'POST'])
+	# === page: data ==================
+	@view.route('/data', methods=['GET', 'POST'])
 	def page_data():
 		toggle_dir_arg = 'vertical'
 		table, number_arg = df, ''
