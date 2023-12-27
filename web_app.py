@@ -26,14 +26,18 @@ def run(name: str, port: int = 80, df: pd.DataFrame | None = None, serve_locally
 def run_app(app: Flask, host: str = '127.0.0.1', port: int = 5000, dev_mode: bool = False):
 	""" Run the `Flask` app """
 	if dev_mode is True:
-		app.run(
+		return app.run(
 			host=host,
 			port=port,
 			debug=dev_mode,
+			load_dotenv=False,
 			use_debugger=dev_mode,
 			use_reloader=dev_mode)
-		return
-	serve(app, host=host, port=port)
+
+	import logging
+	logging.basicConfig(level=logging.ERROR)
+	print(f'> Serving on http://{host}:{port} ...\n', end='', flush=True)
+	return serve(app, host=host, port=port)
 
 
 def init_app(name: str = __name__) -> Flask:
