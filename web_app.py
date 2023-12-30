@@ -15,11 +15,8 @@ def run(name: str, port: int = 80, df: pd.DataFrame | None = None, serve_locally
 	app = init_app(name)
 	register_routes(app, pd.DataFrame() if df is None else df)
 
-	try:
-		host = f.get_local_ipv4() if serve_locally else '0.0.0.0'
-		run_app(app, host, port, c.DEV_MODE)
-	except KeyboardInterrupt:
-		return 1
+	host = f.get_local_ipv4() if serve_locally else '0.0.0.0'
+	run_app(app, host, port, c.DEV_MODE)
 	return 0
 
 
@@ -49,8 +46,8 @@ def send_error_response(title: str, code: int, error_html: str) -> tuple[str, in
 	return (
 		render_template(
 			'error.html',
-			page_title=title,
-			head_title='Error',
+			title=title,
+			page_title='Error',
 			error_code=code,
 			error_html=error_html),
 		code)
@@ -72,8 +69,8 @@ def register_routes(app: Flask, df: pd.DataFrame):
 	def index():
 		return render_template(
 			'home.html',
-			page_title=title,
-			head_title='Home',
+			title=title,
+			page_title='Home',
 			py_version=f.python_version(),
 			dict_table=df.to_dict())
 
@@ -108,8 +105,8 @@ def register_routes(app: Flask, df: pd.DataFrame):
 			'page-data.html',
 			number_count=number_count,
 			number_arg=number_arg,
-			page_title=title,
-			head_title='Data',
+			title=title,
+			page_title='Data',
 			table_direction=toggle_dir_arg,
 			dict_table=table.to_dict())
 

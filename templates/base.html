@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-{%- if not (head_title is defined) -%}
-	{%- set head_title = 'Page' -%}
+{%- if not (page_title is defined) -%}
+	{%- set page_title = 'Page' -%}
 {%- endif %}
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="UTF-8" />
 	{%- if error_code is defined %}
-		<title>{{ page_title }} - {{ head_title }}: {{ error_code }}</title>
-		<meta name="title" content="{{ page_title }} - {{ head_title }}: {{ error_code }}" />
+		<title>{{ title }} - {{ page_title }}: {{ error_code }}</title>
+		<meta name="title" content="{{ title }} - {{ page_title }}: {{ error_code }}" />
 	{%- else %}
-		<title>{{ page_title }} - {{ head_title }}</title>
-		<meta name="title" content="{{ page_title }} - {{ head_title }}" />
+		<title>{{ title }} - {{ page_title }}</title>
+		<meta name="title" content="{{ title }} - {{ page_title }}" />
 	{%- endif %}
 	<meta name="referrer" content="strict-origin" />
 	<meta name="robots" content="noindex, nofollow" />
@@ -26,14 +26,22 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='js/lib/bootstrap.5.1.3.min.js', _external=True) }}" defer=""></script>
 	{%- block page_head_content -%}{%- endblock %}
 </head>
-<body id="body">
-	<div class="container-fluid">
-		{%- if page_title is defined -%}
-			<h1 id="page-title" class="text-center display-3 mb-3">{{ page_title|safe }}</h1>
-		{%- else -%}
-			<h1 id="page-title" class="text-center display-3 mb-3">{{ head_title }}</h1>
-		{%- endif -%}
-		<div class="text-center d-block w-100 mx-auto">
+<body id="body" class="dark-theme">
+	<div class="container-fluid my-2">
+		<div class="container-fluid text-center position-relative">
+			{%- if title is defined -%}
+				<h1 id="page-title" class="text-center display-3 mb-3">{{ title|safe }}</h1>
+			{%- else -%}
+				<h1 id="page-title" class="text-center display-3 mb-3">{{ page_title }}</h1>
+			{%- endif -%}
+			<div class="position-absolute top-0 end-0">
+				<button type="button" id="theme-button" class="btn btn-outline-warning">
+					<i class="icon icon-sun"></i>
+					<i class="icon icon-moon"></i>
+				</button>
+			</div>
+		</div>
+		<div class="container-fluid text-center">
 			<div class="btn-group" role="group">
 				<a
 					class="btn {% if request.endpoint == 'view.index' %}btn-primary{% else %}btn-outline-primary{% endif %}"

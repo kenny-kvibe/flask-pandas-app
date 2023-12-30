@@ -51,45 +51,47 @@
 				</div>
 			</div>
 		{% endif %}
-		<div class="col col-12 mb-1">
-			<table class="table table-bordered table table-bordered border border-dark table-hover shadow text-wrap text-break">
-				<tbody>
-					{% if table_direction == 'horizontal' %}
-						{% for key, dict in dict_table|items %}
-							<tr>
-								<th scope="row" class="text-dark border-dark table-warning">{{ key }}</th>
-								{% for value in dict.values() %}
-									<td class="text-dark border-dark {%
-										if number_arg == '' %}table-primary{%
-										elif number_arg == value|string %}table-success{%
-										else %}table-danger{%
-										endif %}"
-									>{{ value }}</td>
-								{% endfor %}
-							</tr>
-						{% endfor %}
-					{% elif table_direction == 'vertical' %}
-						<tr>
-							{% for key in dict_table.keys() %}
-								<th scope="col" class="text-dark border-dark table-warning">{{ key }}</th>
+		<div class="col col-12 mb-2">
+			<div class="d-block rounded-table border-dark">
+				<table class="table table-bordered table table-bordered border border-dark table-hover shadow text-wrap text-break text-dark m-0">
+					<tbody>
+						{% if table_direction == 'horizontal' %}
+							{% for key, dict in dict_table|items %}
+								<tr>
+									<th scope="row" class="text-dark border-dark table-warning">{{ key }}</th>
+									{% for value in dict.values() %}
+										<td class="border-dark {%
+											if number_arg == '' %}table-primary{%
+											elif number_arg == value|string %}table-success{%
+											else %}table-danger{%
+											endif %}"
+										>{{ value }}</td>
+									{% endfor %}
+								</tr>
 							{% endfor %}
-						</tr>
-						{% for idx in range(dict_table|length) %}
+						{% elif table_direction == 'vertical' %}
 							<tr>
-								{% for dict in dict_table.values() %}
-									{% set value = dict[idx] %}
-									<td class="text-dark border-dark {%
-										if number_arg == '' %}table-primary{%
-										elif number_arg == value|string %}table-success{%
-										else %}table-danger{%
-										endif %}"
-									>{{ value }}</td>
+								{% for key in dict_table.keys() %}
+									<th scope="col" class="border-dark table-warning">{{ key }}</th>
 								{% endfor %}
 							</tr>
-						{% endfor %}
-					{% endif %}
-				</tbody>
-			</table>
+							{% for idx in range(dict_table|length) %}
+								<tr>
+									{% for dict in dict_table.values() %}
+										{% set value = dict[idx] %}
+										<td class="border-dark {%
+											if number_arg == '' %}table-primary{%
+											elif number_arg == value|string %}table-success{%
+											else %}table-danger{%
+											endif %}"
+										>{{ value }}</td>
+									{% endfor %}
+								</tr>
+							{% endfor %}
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 {%- endblock -%}

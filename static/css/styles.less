@@ -1,3 +1,29 @@
+@fg-color: #cecece;
+@bg-color: #020202;
+
+@color-primary-light: #cfe2ff;
+@color-primary-dark: #084298;
+
+@color-secondary-light: #e2e3e5;
+@color-secondary-dark: #41464b;
+@color-secondary-darker: #212529;
+@color-secondary-darker-hover: #404040AA;
+
+@color-warning-light: #fff3cd;
+@color-warning-dark: #664d03;
+
+@color-danger-light: #f8d7da;
+@color-danger-dark: #842029;
+
+@color-success-light: #d1e7dd;
+@color-success-dark: #0f5132;
+
+@color-info-light: #cff4fc;
+@color-info-dark: #055160;
+
+@color-light: #fefefe;
+
+
 * {
 	margin: 0;
 	padding: 0;
@@ -13,9 +39,269 @@
 		table-layout: fixed;
 
 		tr {
-			th, td {
+			th,
+			td {
 				font-family: 'Consolas', 'Monospace';
 			}
+		}
+	}
+
+	#search-result-alert {
+		.btn {
+			color: inherit;
+		}
+	}
+
+	.rounded-table {
+		overflow: hidden;
+		border-radius: 5px;
+		border: 1px solid currentColor;
+	}
+
+	#theme-button {
+		width: 32px;
+		height: 32px;
+		padding: 5px;
+	}
+
+	&.dark-theme {
+		background-color: @bg-color;
+		color: @fg-color;
+
+		.popover-header {
+			color: @bg-color;
+		}
+
+		.form-control {
+			color: @color-secondary-light;
+			background-color: @color-secondary-darker;
+			border-color: @color-secondary-dark;
+		}
+
+		.input-group-text {
+			color: @color-secondary-light;
+			background-color: @color-secondary-dark;
+			border-color: @color-secondary-dark;
+		}
+
+		.border-dark {
+			border-color: @color-secondary-darker !important;
+		}
+
+		#theme-button {
+			padding: 3px;
+
+			.icon-sun {
+				display: block !important;
+			}
+
+			.icon-moon {
+				display: none !important;
+			}
+		}
+
+		.table {
+			&.shadow {
+				box-shadow: 0 .5rem 1rem rgba(225, 225, 225, .1) !important
+			}
+
+			th {
+				color: @color-light !important;
+			}
+
+			td {
+				color: @color-secondary-light !important;
+			}
+
+			tr:hover > * {
+				--bs-table-accent-bg: @color-secondary-darker-hover;
+				--bs-table-hover-bg: @color-secondary-darker-hover;
+			}
+
+			.table-primary {
+				background-color: @color-primary-dark;
+			}
+
+			.table-secondary {
+				background-color: @color-secondary-dark;
+			}
+
+			.table-warning {
+				background-color: @color-warning-dark;
+			}
+
+			.table-success {
+				background-color: @color-success-dark;
+			}
+
+			.table-danger {
+				background-color: @color-danger-dark;
+			}
+
+			.table-info {
+				background-color: @color-info-dark;
+			}
+		}
+
+		.alert-primary {
+			color: @color-primary-light;
+			border-color: @color-primary-dark;
+			background-color: @color-primary-dark;
+		}
+
+		.alert-secondary {
+			color: @color-secondary-light;
+			border-color: @color-secondary-dark;
+			background-color: @color-secondary-dark;
+		}
+
+		.alert-warning {
+			color: @color-warning-light;
+			border-color: @color-warning-dark;
+			background-color: @color-warning-dark;
+		}
+
+		.alert-success {
+			color: @color-success-light;
+			background-color: @color-success-dark;
+			border-color: @color-success-dark;
+		}
+
+		.alert-danger {
+			color: @color-danger-light;
+			border-color: @color-danger-dark;
+			background-color: @color-danger-dark;
+		}
+
+		.alert-info {
+			color: @color-info-light;
+			border-color: @color-info-dark;
+			background-color: @color-info-dark;
+		}
+
+		.list-group-item-primary {
+			color: @color-primary-light;
+			background-color: @color-primary-dark;
+
+			&:hover {
+				color: @color-primary-dark;
+				background-color: @color-primary-light;
+			}
+		}
+
+		.list-group-item-secondary {
+			color: @color-secondary-light;
+			background-color: @color-secondary-dark;
+
+			&:hover {
+				color: @color-secondary-dark;
+				background-color: @color-secondary-light;
+			}
+		}
+
+		.list-group-item-warning {
+			color: @color-warning-light;
+			background-color: @color-warning-dark;
+
+			&:hover {
+				color: @color-warning-dark;
+				background-color: @color-warning-light;
+			}
+		}
+
+		.list-group-item-danger {
+			color: @color-danger-light;
+			background-color: @color-danger-dark;
+
+			&:hover {
+				color: @color-danger-dark;
+				background-color: @color-danger-light;
+			}
+		}
+
+		.list-group-item-success {
+			color: @color-success-light;
+			background-color: @color-success-dark;
+
+			&:hover {
+				color: @color-success-dark;
+				background-color: @color-success-light;
+			}
+		}
+
+		.list-group-item-info {
+			color: @color-info-light;
+			background-color: @color-info-dark;
+
+			&:hover {
+				color: @color-info-dark;
+				background-color: @color-info-light;
+			}
+		}
+	}
+
+	.icon-sun {
+		box-sizing: border-box;
+		position: relative;
+		display: none;
+		width: 24px;
+		height: 24px;
+		background: linear-gradient(to bottom, currentColor 4px, transparent 0) no-repeat 5px -6px/2px 6px,
+					linear-gradient(to bottom, currentColor 4px, transparent 0) no-repeat 5px 14px/2px 6px,
+					linear-gradient(to bottom, currentColor 4px, transparent 0) no-repeat -8px 5px/6px 2px,
+					linear-gradient(to bottom, currentColor 4px, transparent 0) no-repeat 14px 5px/6px 2px;
+		border-radius: 100px;
+		box-shadow: inset 0 0 0 2px;
+		border: 6px solid transparent;
+
+		&::after,
+		&::before {
+			content: "";
+			display: block;
+			box-sizing: border-box;
+			position: absolute;
+			width: 24px;
+			height: 2px;
+			border-right: 4px solid;
+			border-left: 4px solid;
+			left: -6px;
+			top: 5px;
+		}
+
+		&::before {
+			transform: rotate(-45deg);
+		}
+
+		&::after {
+			transform: rotate(45deg);
+		}
+	}
+
+	.icon-moon {
+		overflow: hidden;
+		position: relative;
+		transform: rotate(-135deg) scale(0.9);
+		width: 20px;
+		height: 20px;
+		border: 2px solid;
+		border-bottom-color: transparent;
+
+		&,
+		&::after {
+			display: block;
+			box-sizing: border-box;
+			border-radius: 50%;
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			width: 12px;
+			height: 18px;
+			border: 2px solid transparent;
+			box-shadow: 0 0 0 2px;
+			top: 8px;
+			left: 2px;
 		}
 	}
 }
